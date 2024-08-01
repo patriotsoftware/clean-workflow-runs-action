@@ -32,5 +32,6 @@ fi
 
 for RUN in $RUNS; do
   # gh run delete --repo $REPOSITORY $RUN || echo "Failed to delete run $RUN"
+  echo "run value: $RUN"
   sleep 0.1
 done
