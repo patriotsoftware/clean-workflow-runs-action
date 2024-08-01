@@ -18,10 +18,10 @@ runs:
   steps:    
   - uses: actions/checkout@v4
 
-  - env:
+  - continue-on-error: true
+    run: bash delete-runs.sh
+    env:
       GH_TOKEN: ${{ inputs.github-token }}
       REPOSITORY: ${{ inputs.repository }}
       WORKFLOW_NAME: ${{ inputs.workflow }}
-    continue-on-error: true
-    run: bash delete-runs.sh
     shell: bash
