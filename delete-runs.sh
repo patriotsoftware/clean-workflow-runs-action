@@ -9,7 +9,7 @@ then
       gh api \
         -H "Accept: application/vnd.github+json" \
         -H "X-GitHub-Api-Version: 2022-11-28" \
-        "/repos/$REPOSITORY/actions/workflows/$WORKFLOW_NAME/runs" \
+        "/repos/$REPOSITORY/actions/runs?per_page=100" \
         --paginate \
         --jq '.workflow_runs[] | select(.created_at < "'$date'") | .id'
     ) 
