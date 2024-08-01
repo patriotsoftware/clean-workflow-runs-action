@@ -24,7 +24,7 @@ runs:
   - uses: actions/checkout@v4
 
   - continue-on-error: true
-    run: bash delete-runs.sh
+    run: delete-runs.sh
     env:
       GH_TOKEN: ${{ inputs.github-token }}
       REPOSITORY: ${{ inputs.repository }}
