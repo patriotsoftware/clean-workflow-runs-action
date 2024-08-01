@@ -15,6 +15,8 @@ then
         --paginate \
         --jq '.workflow_runs[] | select(.created_at < "'$date'") | .id'
     ) 
+
+    echo "Found $(echo "$RUNS" | wc -l) workflow runs older than $DAYS_AGO"
 else
     echo "Getting all completed runs for workflow $WORKFLOW_NAME in $REPOSITORY"
 
