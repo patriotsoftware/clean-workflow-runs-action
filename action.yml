@@ -20,14 +20,20 @@ inputs:
   
 runs:
   using: 'composite'
+  env:
+    GH_TOKEN: ${{ inputs.github-token }}
+    REPOSITORY: ${{ inputs.repository }}
+    WORKFLOW_NAME: ${{ inputs.workflow }}
+    DAYS_AGO: ${{ inputs.days-ago }}
   steps:    
   - uses: actions/checkout@v4
 
-  - continue-on-error: true
-    run: bash ${{ github.action_path }}/delete-runs.sh
-    env:
-      GH_TOKEN: ${{ inputs.github-token }}
-      REPOSITORY: ${{ inputs.repository }}
-      WORKFLOW_NAME: ${{ inputs.workflow }}
-      DAYS_AGO: ${{ inputs.days-ago }}
+  - if: ${{ inputs.workflow == '' }}
+    continue-on-error: true
+    run: bash ${{ github.action_path }}/expired-runs.sh
+    shell: bash
+
+  - if: ${{ inputs.workflow != '' }}
+    continue-on-error: true
+    run: bash ${{ github.action_path }}/workflow-runs.sh
     shell: bash
