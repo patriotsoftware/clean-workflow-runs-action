@@ -11,7 +11,8 @@ inputs:
     required: true  
   workflow:
     description: 'Workflow file name'
-    required: true
+    required: false
+    default: ''
   days-ago:
     description: 'Workflow log runs days ago'
     required: false
