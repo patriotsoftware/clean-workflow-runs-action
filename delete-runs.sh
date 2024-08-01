@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[-z "$WORKFLOW_NAME"]]
+if [ -z "${WORKFLOW_NAME}" ]
 then
     date=$(date --date='$DAYS_AGO days ago' --iso-8601='seconds')
     echo "Getting all workflows in $REPOSITORY older than $DAYS_AGO or before $date"
