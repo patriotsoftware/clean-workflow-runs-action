@@ -13,7 +13,7 @@ then
         -H "X-GitHub-Api-Version: 2022-11-28" \
         "/repos/$REPOSITORY/actions/runs?per_page=100" \
         --paginate \
-        --jq '.workflow_runs[] | select(.created_at < "'$date'") | .id'
+        --jq '.workflow_runs[] | select(.created_at > "'$date'") | .id'
     )    
 else
     echo "Getting all completed run(s) for workflow $WORKFLOW_NAME in $REPOSITORY"
@@ -30,8 +30,10 @@ fi
 
 echo "Found $(echo "$RUNS" | wc -l) workflow run(s)."
 
-for RUN in $RUNS; do
-  # gh run delete --repo $REPOSITORY $RUN || echo "Failed to delete run $RUN"
+for RUN in $RUNS; do  
+  echo "listing runs"
   echo "run value: $RUN"
   sleep 0.1
 done
+
+# gh run delete --repo $REPOSITORY $RUN || echo "Failed to delete run $RUN"
