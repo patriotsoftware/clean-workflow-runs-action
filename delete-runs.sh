@@ -14,11 +14,9 @@ then
         "/repos/$REPOSITORY/actions/runs?per_page=100" \
         --paginate \
         --jq '.workflow_runs[] | select(.created_at < "'$date'") | .id'
-    ) 
-
-    echo "Found $(echo "$RUNS" | wc -l) workflow runs older than $DAYS_AGO"
+    )    
 else
-    echo "Getting all completed runs for workflow $WORKFLOW_NAME in $REPOSITORY"
+    echo "Getting all completed run(s) for workflow $WORKFLOW_NAME in $REPOSITORY"
 
     RUNS=$(
       gh api \
@@ -28,9 +26,9 @@ else
         --paginate \
         --jq '.workflow_runs[] | select(.conclusion != "") | .id'
     ) 
-
-    echo "Found $(echo "$RUNS" | wc -l) completed runs for workflow $WORKFLOW_NAME"
 fi
+
+echo "Found $(echo "$RUNS" | wc -l) workflow run(s)."
 
 for RUN in $RUNS; do
   # gh run delete --repo $REPOSITORY $RUN || echo "Failed to delete run $RUN"
