@@ -7,7 +7,7 @@ collect_runs() {
       -H "X-GitHub-Api-Version: 2022-11-28" \
       "/repos/$REPOSITORY/actions/$1" \
       --paginate \
-      --jq '.workflow_runs[] | ' + $2 + ' | .id'
+      --jq '.workflow_runs[] | $2 | .id'
   )   
 }
 
@@ -17,13 +17,13 @@ get_expired() {
   github_date=$(date -d @${date} +'%Y-%m-%dT%H:%M:%S-04:00')
   echo "Getting all workflows in $REPOSITORY older than $DAYS_AGO days or before $formatted_date"
 
-  collect_runs 'runs?per_page=100' 'select(.created_at < "'$github_date'")'
+  collect_runs "runs?per_page=100" "select(.created_at < "\"'$github_date'\"")"
 }
 
 get_workflow() {
   echo "Getting all completed run(s) for workflow $WORKFLOW_NAME in $REPOSITORY"
 
-  collect_runs 'workflows/$WORKFLOW_NAME/runs' 'select(.conclusion != "")'
+  collect_runs "workflows/$WORKFLOW_NAME/runs" "select(.conclusion != \""\"")"
 }
 
 if [ -z "${WORKFLOW_NAME}" ]; then
