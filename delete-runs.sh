@@ -13,7 +13,7 @@ then
         -H "X-GitHub-Api-Version: 2022-11-28" \
         "/repos/$REPOSITORY/actions/runs?per_page=100" \
         --paginate \
-        --jq '.workflow_runs[] | select(.created_at > "'$date'") | .id'
+        --jq '.workflow_runs[] | select(.created_at < "'$date'") | .id'
     )    
 else
     echo "Getting all completed run(s) for workflow $WORKFLOW_NAME in $REPOSITORY"
