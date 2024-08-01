@@ -16,24 +16,23 @@ inputs:
   days-ago:
     description: 'Workflow log runs days ago'
     required: false
-    default: '0'
+    default: '1'
+  test:
+    description: 'Not delete, only test'
+    required: false
+    default: 'false'
   
 runs:
-  using: 'composite'
-  env:
-    GH_TOKEN: ${{ inputs.github-token }}
-    REPOSITORY: ${{ inputs.repository }}
-    WORKFLOW_NAME: ${{ inputs.workflow }}
-    DAYS_AGO: ${{ inputs.days-ago }}
+  using: 'composite'  
   steps:    
   - uses: actions/checkout@v4
 
-  - if: ${{ inputs.workflow == '' }}
+  - env:
+      GH_TOKEN: ${{ inputs.github-token }}
+      REPOSITORY: ${{ inputs.repository }}
+      WORKFLOW_NAME: ${{ inputs.workflow }}
+      DAYS_AGO: ${{ inputs.days-ago }}
+      TEST: ${{ inputs.test }}
     continue-on-error: true
-    run: bash ${{ github.action_path }}/expired-runs.sh
-    shell: bash
-
-  - if: ${{ inputs.workflow != '' }}
-    continue-on-error: true
-    run: bash ${{ github.action_path }}/workflow-runs.sh
+    run: bash ${{ github.action_path }}/delete-runs.sh
     shell: bash
