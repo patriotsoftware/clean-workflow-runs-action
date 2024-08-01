@@ -3,7 +3,7 @@
 if [ -z "${WORKFLOW_NAME}" ]
 then
     # date=$(date --date='$DAYS_AGO days ago' --iso-8601='seconds')
-    date=$(date -d @${DAYS_AGO} + " days ago" +%s)
+    date=$(date -d $DAYS_AGO + " days ago" +%s)
     formatted_date=$(date -d @${date} +'%Y-%m-%d %H:%M:%S')
     echo "Getting all workflows in $REPOSITORY older than $DAYS_AGO or before $formatted_date"
     
