@@ -1,35 +1,38 @@
 #!/bin/bash
 
-collect_runs() {
-  RUNS=$(
-    gh api \
-      -H "Accept: application/vnd.github+json" \
-      -H "X-GitHub-Api-Version: 2022-11-28" \
-      "/repos/$REPOSITORY/actions/$1" \
-      --paginate \
-      --jq '.workflow_runs[] | $2 | .id'
-  )   
-}
-
-get_expired() {
+collect_expired() {
   date=$(date -d "$DAYS_AGO days ago" +%s)
   formatted_date=$(date -d @${date} +'%Y-%m-%d %H:%M:%S')
   github_date=$(date -d @${date} +'%Y-%m-%dT%H:%M:%S-04:00')
   echo "Getting all workflows in $REPOSITORY older than $DAYS_AGO days or before $formatted_date"
 
-  collect_runs "runs?per_page=100" "select(.created_at < "\"'$github_date'\"")"
+  RUNS=$(
+    gh api \
+      -H "Accept: application/vnd.github+json" \
+      -H "X-GitHub-Api-Version: 2022-11-28" \
+      "/repos/$REPOSITORY/actions/runs?per_page=100" \
+      --paginate \
+      --jq '.workflow_runs[] | select(.created_at < "'$github_date'") | .id'
+  )        
 }
 
-get_workflow() {
+collect_workflow() {
   echo "Getting all completed run(s) for workflow $WORKFLOW_NAME in $REPOSITORY"
 
-  collect_runs "workflows/$WORKFLOW_NAME/runs" "select(.conclusion != \""\"")"
+  RUNS=$(
+    gh api \
+      -H "Accept: application/vnd.github+json" \
+      -H "X-GitHub-Api-Version: 2022-11-28" \
+      "/repos/$REPOSITORY/actions/workflows/$WORKFLOW_NAME/runs" \
+      --paginate \
+      --jq '.workflow_runs[] | select(.conclusion != "") | .id'
+  ) 
 }
 
 if [ -z "${WORKFLOW_NAME}" ]; then
-  get_expired
+  collect_expired
 else
-  get_workflow
+  collect_workflow
 fi
 
 echo "Found $(echo "$RUNS" | wc -l) workflow run(s)."
